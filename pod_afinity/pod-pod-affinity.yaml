@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-affinity-backend
+  labels:
+    app: myapp
+    service: backend
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-affinity-frontend
+  labels:
+    app: myapp
+    service: frontend
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoreDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: service
+            operator: In
+            values:
+            - backend
+        topologyKey: kubernetes.io/hostname
+  containers:
+  - name: nginx
+    image: nginx

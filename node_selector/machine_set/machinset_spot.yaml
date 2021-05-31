@@ -1,0 +1,92 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  annotations:
+    machine.openshift.io/GPU: "0"
+    machine.openshift.io/memoryMb: "32768"
+    machine.openshift.io/vCPU: "8"
+  labels:
+    machine.openshift.io/cluster-api-cluster: cluster-1b74-r45lt
+  name: cluster-1b74-r45lt-worker-eu-west-1a-spot
+  namespace: openshift-machine-api
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: cluster-1b74-r45lt
+      machine.openshift.io/cluster-api-machineset: cluster-1b74-r45lt-worker-eu-west-1a-spot
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: cluster-1b74-r45lt
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: cluster-1b74-r45lt-worker-eu-west-1a-spot
+        aws_spot: "True"
+    spec:
+      metadata:
+        labels:
+          region: east
+      providerSpec:
+        value:
+          spotMarketOptions: {}
+          ami:
+            id: ami-024bedcf934548fb4
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              encrypted: true
+              iops: 0
+              kmsKey:
+                arn: ""
+              volumeSize: 120
+              volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: cluster-1b74-r45lt-worker-profile
+          instanceType: m5.2xlarge
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          placement:
+            availabilityZone: eu-west-1a
+            region: eu-west-1
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - cluster-1b74-r45lt-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - cluster-1b74-r45lt-private-eu-west-1a
+          tags:
+          - name: kubernetes.io/cluster/cluster-cd52-2ddz6
+            value: owned
+          - name: uuid
+            value: bdecf01c-764e-4410-9cf6-36bed5a0a27d
+          - name: Stack
+            value: project ocp4-workshop-cd52
+          - name: catalog_item
+            value: OpenShift_4_Service_Mesh_Lab
+          - name: email
+            value: jclaretm@redhat.com
+          - name: env_type
+            value: ocp4-workshop
+          - name: guid
+            value: cd52
+          - name: owner
+            value: jclaretm@redhat.com
+          - name: platform
+            value: Red_Hat_OPENTLC
+          userDataSecret:
+            name: worker-user-data
+status:
+  availableReplicas: 1
+  fullyLabeledReplicas: 1
+  observedGeneration: 10
+  readyReplicas: 1
+  replicas: 1

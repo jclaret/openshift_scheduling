@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-affinity-front-fail
+  labels:
+    application: suma
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-affinity-database-fail
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: application
+            operator: In
+            values:
+            - resta
+        topologyKey: kubernetes.io/hostname
+  containers:
+  - name: nginx
+    image: nginx

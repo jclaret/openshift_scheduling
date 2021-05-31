@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-node-selector
+  labels:
+    env: testing
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  nodeSelector:
+    gpu: "yes"

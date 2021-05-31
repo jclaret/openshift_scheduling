@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-antiaffinity-frontend
+  labels:
+    application: suma
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-antiaffinity-database
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: application
+            operator: In
+            values:
+            - suma
+        topologyKey: kubernetes.io/hostname
+  containers:
+  - name: pod-antiaffinity-database
+    image: nginx

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-node-affinity
+spec:
+  affinity:
+    nodeAffinity: 
+      requiredDuringSchedulingIgnoredDuringExecution: 
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: mining
+            operator: In 
+            values:
+            - "yes"
+          - key: gpu
+            operator: In 
+            values:
+            - "yes"
+  containers:
+  - name: nginx
+    image: nginx
